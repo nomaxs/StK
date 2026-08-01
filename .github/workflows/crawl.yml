@@ -1,0 +1,64 @@
+name: Crawl keywords
+
+# Runs the crawler on a schedule (and lets you trigger it manually from the
+# Actions tab), then commits and pushes the updated data/keywords.csv if it
+# changed. Nothing to run locally — this happens on GitHub's servers.
+
+on:
+  schedule:
+    # Runs once a day at 03:00 UTC. Edit the cron expression to change the
+    # frequency (cron is always in UTC, not your local time).
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    # Adds a "Run workflow" button on the Actions tab for on-demand runs.
+    inputs:
+      seeds:
+        description: "Seed words to expand (space separated). Leave blank to just --resume."
+        required: false
+        default: ""
+      max_new:
+        description: "Max new keywords this run"
+        required: false
+        default: "2000"
+
+permissions:
+  contents: write
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r crawler/requirements.txt
+
+      - name: Run crawler
+        working-directory: crawler
+        run: |
+          SEEDS="${{ github.event.inputs.seeds }}"
+          MAX="${{ github.event.inputs.max_new }}"
+          MAX="${MAX:-2000}"
+          if [ -n "$SEEDS" ]; then
+            python main.py $SEEDS --max "$MAX"
+          else
+            python main.py --resume --max "$MAX"
+          fi
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- data/keywords.csv; then
+            git add data/keywords.csv
+            git commit -m "Crawl: update keywords.csv [automated]"
+            git push
+          else
+            echo "No new keywords this run."
+          fi

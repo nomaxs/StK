@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star Keywords</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">✶</span>
+    <span class="brand-name">Star Keywords</span>
+  </div>
+
+  <div class="search-wrap">
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Search keywords…  ( / to focus )"
+      autocomplete="off"
+      spellcheck="false"
+    >
+  </div>
+
+  <div class="stats" id="stats">
+    <span><strong id="statTotal">0</strong> keywords</span>
+    <span><strong id="statReviewed">0</strong> reviewed</span>
+    <span><strong id="statStarred">0</strong> starred</span>
+  </div>
+</header>
+
+<nav class="filterbar" id="filterbar">
+  <button class="filter-tab is-active" data-filter="all">All</button>
+  <button class="filter-tab" data-filter="starred">Starred</button>
+  <button class="filter-tab" data-filter="unreviewed">Unreviewed</button>
+  <button class="filter-tab" data-filter="reviewed">Reviewed</button>
+  <span class="filterbar-spacer"></span>
+  <span class="hint">↑↓ navigate · g google · c copy · s star · x review</span>
+</nav>
+
+<main class="layout">
+
+  <section class="list-panel">
+    <div class="list-head">
+      <span class="col col-check"></span>
+      <span class="col col-keyword">Keyword</span>
+      <span class="col col-parent">Parent</span>
+      <span class="col col-actions"></span>
+    </div>
+    <div class="list-scroll" id="listScroll">
+      <div class="list-spacer" id="listSpacer">
+        <div class="list-rows" id="listRows"></div>
+      </div>
+    </div>
+    <div class="empty-state" id="emptyState" hidden>
+      <p>No keywords match this view.</p>
+      <p class="empty-sub">Try a different search or filter, or run the crawler to add more.</p>
+    </div>
+  </section>
+
+  <aside class="detail-panel" id="detailPanel">
+    <div class="detail-empty" id="detailEmpty">
+      <p>Select a keyword</p>
+      <p class="detail-empty-sub">Its lineage, notes, and actions will show up here.</p>
+    </div>
+
+    <div class="detail-content" id="detailContent" hidden>
+      <div class="detail-lineage" id="detailLineage"></div>
+
+      <h2 class="detail-keyword" id="detailKeyword"></h2>
+      <p class="detail-source">Source: Google Autocomplete</p>
+
+      <div class="detail-actions">
+        <button class="btn btn-primary" id="btnGoogle">Open Google</button>
+        <button class="btn" id="btnCopy">Copy</button>
+        <button class="btn btn-star" id="btnStar">☆ Star</button>
+        <button class="btn btn-review" id="btnReview">Mark reviewed</button>
+      </div>
+
+      <label class="notes-label" for="notesArea">Notes</label>
+      <textarea id="notesArea" class="notes-area" placeholder="Ideas, competition, next steps…"></textarea>
+    </div>
+  </aside>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
